@@ -1,0 +1,51 @@
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/gen2"))()
+
+local Window = Rayfield:CreateWindow({
+    name = "IMMIE HUB",
+    subtitle = "Build a car and drive!",
+    sidebarLayout = true,
+})
+
+local Tab = Window:CreateTab({
+    name = "Main",
+})
+
+local AutoRoll = false
+
+local function triggerPrompt(prompt)
+    if prompt and prompt:IsA("ProximityPrompt") then
+        fireproximityprompt(prompt)
+    end
+end
+
+Tab:CreateToggle({
+    name = "Auto Roll",
+    callback = function(value)
+        AutoRoll = value
+
+        if AutoRoll then
+            task.spawn(function()
+                while AutoRoll do
+                    for i = 1, 5 do
+                        local plot = workspace.Game.Lobby.Plots:FindFirstChild("Plot" .. i)
+
+                        if plot then
+                            local rollBlocks = plot.Rolls.RollBlocks:FindFirstChild("Roll")
+                            local rollWeapons = plot.Rolls.RollWeapons:FindFirstChild("Roll")
+
+                            if rollBlocks then
+                                triggerPrompt(rollBlocks:FindFirstChildOfClass("ProximityPrompt"))
+                            end
+
+                            if rollWeapons then
+                                triggerPrompt(rollWeapons:FindFirstChildOfClass("ProximityPrompt"))
+                            end
+                        end
+                    end
+
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end,
+})
